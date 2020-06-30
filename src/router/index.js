@@ -6,6 +6,7 @@ import SecureComponent from "../views/secure.vue"
 Vue.use(VueRouter)
 
 export default new VueRouter({
+    mode: 'history',
     routes: [{
             path: '/',
             redirect: {
