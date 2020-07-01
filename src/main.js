@@ -10,6 +10,9 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import router from './router'
 import store from './store'
 
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 Vue.config.productionTip = false
 
 new Vue({
