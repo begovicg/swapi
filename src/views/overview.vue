@@ -2,15 +2,55 @@
   <v-container class="fill-height" fluid>
     <v-row align="center">
       <v-col class="d-flex" cols="12" sm="6">
-        <v-select :items="categories" label="Select category" v-model="activeCategory" outlined></v-select>
+        <v-select
+          :items="categories"
+          label="Select category"
+          v-model="activeCategory"
+          outlined
+          @change="getResources()"
+        ></v-select>
       </v-col>
-      <v-col class="d-flex" cols="12" sm="6">
-        <v-btn text large color="primary" @click="getResources()">Get Resources</v-btn>
-      </v-col>
-    </v-row>
-    <v-row align="center">
-      <v-col class="d-flex" cols="12">
+      <v-col class="d-flex" cols="12" sm="6" v-if="activeCategoryData">
+        <!--
         <vue-json-pretty :data="activeCategoryData" v-if="activeCategoryData"></vue-json-pretty>
+        -->
+
+        <!-- List fetched items by their basic property -->
+        <!-- Title for films, name for others -->
+
+        <v-card width="100%">
+          <v-list v-if="activeCategory=='films'">
+
+            <v-list-item v-for="item in activeCategoryData" :key="item.title">
+
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
+                <v-btn icon>
+                  <v-icon color="grey lighten-1">mdi-information</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+
+          <v-list v-else>
+
+             <v-list-item v-for="item in activeCategoryData" :key="item.name">
+
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
+                <v-btn icon>
+                  <v-icon color="grey lighten-1">mdi-information</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -32,12 +72,12 @@ function buildUrl(url) {
 }
 
 import axios from "axios";
-import VueJsonPretty from "vue-json-pretty";
+//import VueJsonPretty from "vue-json-pretty";
 
 export default {
   name: "overview",
   components: {
-    VueJsonPretty
+    //VueJsonPretty
   },
   data() {
     return {
@@ -59,6 +99,10 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    getCategoryKey(category) {
+      if (category == "films") return "title";
+      return "name";
     }
   }
 };
