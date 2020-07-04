@@ -20,7 +20,6 @@
         <v-card width="100%">
           <v-list>
             <v-list-item v-for="item in activeCategoryData" :key="item.url">
-
               <v-list-item-avatar color="black">
                 <span class="white--text">SW</span>
               </v-list-item-avatar>
@@ -41,43 +40,25 @@
       </v-col>
     </v-row>
 
-
     <!-- Resource details dialog -->
     <!-- TODO: encapsulate in separate component -->
 
-    <v-dialog
-      v-model="dialog"
-      max-width="290"
-    >
+    <v-dialog v-model="dialog" @keydown.esc="dialog = false" scrollable>
       <v-card>
-        <v-card-title class="headline">Use Google's location service?</v-card-title>
+        <v-card-title class="headline" v-if="activeCategory=='films'">{{dialogResource.title}}</v-card-title>
+        <v-card-title class="headline" v-else>{{dialogResource.name}}</v-card-title>
 
         <v-card-text>
-          Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+          <vue-json-pretty :data="dialogResource"></vue-json-pretty>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn
-            color="green darken-1"
-            text
-            @click="dialog = false"
-          >
-            Disagree
-          </v-btn>
-
-          <v-btn
-            color="green darken-1"
-            text
-            @click="dialog = false"
-          >
-            Agree
-          </v-btn>
+          <v-btn color="primary" @click="dialog = false">close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
   </v-container>
 </template>
 
@@ -97,19 +78,20 @@ function buildUrl(url) {
 }
 
 import axios from "axios";
-//import VueJsonPretty from "vue-json-pretty";
+import VueJsonPretty from "vue-json-pretty";
 
 export default {
   name: "overview",
   components: {
-    //VueJsonPretty,
+    VueJsonPretty
   },
   data() {
     return {
-      dialog: false,
       categories: CATEGORIES,
       activeCategory: null,
-      activeCategoryData: null
+      activeCategoryData: null,
+      dialog: false,
+      dialogResource: {}
     };
   },
   mounted() {},
@@ -120,14 +102,13 @@ export default {
         .get(url)
         .then(response => {
           this.activeCategoryData = response.data.results;
-          console.log("fetched category results: ", this.activeCategoryData);
         })
         .catch(error => {
-          console.log(error);
+          this.$swal("Error encountered while fetching data: ", error);
         });
     },
-    showResourceDetails(resource){
-      console.log("showResourceDetails invoked for resource: ", resource);
+    showResourceDetails(resource) {
+      this.dialogResource = resource;
       this.dialog = true;
     }
   }
