@@ -1,6 +1,5 @@
 
 <template>
-  <v-app id="inspire">
     <v-main>
       <v-container
         class="fill-height"
@@ -46,7 +45,6 @@
         </v-row>
       </v-container>
     </v-main>
-  </v-app>
 </template>
 
 <script>
@@ -64,8 +62,9 @@ export default {
     login() {
       if (this.input.username != "" && this.input.password != "") {
         if (
-          this.input.username == this.$parent.mockAccount.username &&
-          this.input.password == this.$parent.mockAccount.password
+          // TODO: refactor, store mock account data in Vuex store
+          this.input.username == this.$parent.$parent.mockAccount.username &&
+          this.input.password == this.$parent.$parent.mockAccount.password
         ) {
           this.$emit("authenticated", true);
           this.$router.replace({ name: "overview" });
