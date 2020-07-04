@@ -1,22 +1,19 @@
 <template>
-  <div id="overview" class="container">
-    <h1>overview Area</h1>
-    <p>This is a overview area</p>
-
-    <section class="callout secondary">
-      <h5 class="text-center">Filter by Category</h5>
-      <form>
-        <div class="row">
-          <div class="large-6 columns">
-            <v-select :options="categories" v-model="activeCategory"></v-select>
-          </div>
-          <div class="medium-6 columns">
-            <a @click="getResources()" class="button expanded">Retrieve</a>
-          </div>
-        </div>
-      </form>
-    </section>
-  </div>
+  <v-container class="fill-height" fluid>
+    <v-row align="center">
+      <v-col class="d-flex" cols="12" sm="6">
+        <v-select :items="categories" label="Select category" v-model="activeCategory" outlined></v-select>
+      </v-col>
+      <v-col class="d-flex" cols="12" sm="6">
+        <v-btn text large color="primary" @click="getResources()">Get Resources</v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <div>
+        {{ activeCategoryData }}
+      </div>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -31,7 +28,7 @@ const CATEGORIES = [
 const SWAPI_base_url = "https://swapi.dev/api/";
 
 function buildUrl(url) {
-  return SWAPI_base_url + url;
+  return SWAPI_base_url + url + "/";
 }
 
 import axios from "axios";
@@ -40,26 +37,19 @@ export default {
   data() {
     return {
       categories: CATEGORIES,
-      activeCategory: null
+      activeCategory: null,
+      activeCategoryData: null,
     };
   },
-  mounted() {
-    // Upon mounting, get resources for chosen category
-    // this.getResources(this.activeCategory);
-    /*
-    axios.get("https://swapi.dev/api/")
-    .then(response => {
-        this.categories = response.data;
-        })
-    */
-  },
+  mounted() {},
   methods: {
     getResources() {
       let url = buildUrl(this.activeCategory);
       axios
         .get(url)
         .then(response => {
-          this.results = response;
+          this.activeCategoryData = response.data.results
+          console.log("fetched category results: ", this.activeCategoryData);
         })
         .catch(error => {
           console.log(error);
