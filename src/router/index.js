@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LoginComponent from "../views/login.vue"
-import SecureComponent from "../views/secure.vue"
+import overviewComponent from "../views/overview.vue"
 
 Vue.use(VueRouter)
 
@@ -19,9 +19,9 @@ export default new VueRouter({
             component: LoginComponent
         },
         {
-            path: "/secure",
-            name: "secure",
-            component: SecureComponent
+            path: "/overview",
+            name: "overview",
+            component: overviewComponent
         }
     ]
 })

@@ -1,7 +1,7 @@
 <template>
-  <div id="secure" class="container">
-    <h1>Secure Area</h1>
-    <p>This is a secure area</p>
+  <div id="overview" class="container">
+    <h1>overview Area</h1>
+    <p>This is a overview area</p>
 
     <section class="callout secondary">
       <h5 class="text-center">Filter by Category</h5>
@@ -36,7 +36,7 @@ function buildUrl(url) {
 
 import axios from "axios";
 export default {
-  name: "Secure",
+  name: "overview",
   data() {
     return {
       categories: CATEGORIES,
@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style scoped>
-#secure {
+#overview {
   background-color: #ffffff;
   border: 1px solid #cccccc;
   padding: 20px;
