@@ -19,33 +19,21 @@
         <!-- Title for films, name for others -->
 
         <v-card width="100%">
-          <v-list v-if="activeCategory=='films'">
+          <v-list>
+            <v-list-item v-for="item in activeCategoryData" :key="item.url">
 
-            <v-list-item v-for="item in activeCategoryData" :key="item.title">
+              <v-list-item-avatar color="black">
+                <span class="white--text">SW</span>
+              </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title v-text="item.title"></v-list-item-title>
+                <v-list-item-title v-text="item.title" v-if="activeCategory=='films'"></v-list-item-title>
+                <v-list-item-title v-text="item.name" v-else></v-list-item-title>
               </v-list-item-content>
 
               <v-list-item-action>
                 <v-btn icon>
-                  <v-icon color="grey lighten-1">mdi-information</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-
-          <v-list v-else>
-
-             <v-list-item v-for="item in activeCategoryData" :key="item.name">
-
-              <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-              </v-list-item-content>
-
-              <v-list-item-action>
-                <v-btn icon>
-                  <v-icon color="grey lighten-1">mdi-information</v-icon>
+                  <v-icon color="primary lighten-1">mdi-information</v-icon>
                 </v-btn>
               </v-list-item-action>
             </v-list-item>
