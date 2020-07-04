@@ -8,6 +8,7 @@
           v-model="activeCategory"
           outlined
           @change="getResources()"
+          auto
         ></v-select>
       </v-col>
       <v-col class="d-flex" cols="12" sm="6" v-if="activeCategoryData">
@@ -25,7 +26,7 @@
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title v-text="item.title" v-if="activeCategory=='films'"></v-list-item-title>
+                <v-list-item-title v-text="item.title" v-if="item.title"></v-list-item-title>
                 <v-list-item-title v-text="item.name" v-else></v-list-item-title>
               </v-list-item-content>
 
@@ -45,7 +46,7 @@
 
     <v-dialog v-model="dialog" @keydown.esc="dialog = false" scrollable>
       <v-card>
-        <v-card-title class="headline" v-if="activeCategory=='films'">{{dialogResource.title}}</v-card-title>
+        <v-card-title class="headline" v-if="dialogResource.title">{{dialogResource.title}}</v-card-title>
         <v-card-title class="headline" v-else>{{dialogResource.name}}</v-card-title>
 
         <v-card-text>
@@ -63,7 +64,7 @@
 </template>
 
 <script>
-const CATEGORIES = [
+const SUBCATEGORIES = [
   "films",
   "people",
   "planets",
@@ -71,6 +72,17 @@ const CATEGORIES = [
   "starships",
   "vehicles"
 ];
+
+const CATEGORIES = [
+  "all",
+  "films",
+  "people",
+  "planets",
+  "species",
+  "starships",
+  "vehicles"
+];
+
 const SWAPI_base_url = "https://swapi.dev/api/";
 
 function buildUrl(url) {
@@ -88,24 +100,52 @@ export default {
   data() {
     return {
       categories: CATEGORIES,
-      activeCategory: null,
-      activeCategoryData: null,
+      activeCategory: "all",
+      activeCategoryData: [],
       dialog: false,
       dialogResource: {}
     };
   },
-  mounted() {},
+  mounted() {
+    this.getResources();
+  },
   methods: {
     getResources() {
-      let url = buildUrl(this.activeCategory);
-      axios
-        .get(url)
-        .then(response => {
-          this.activeCategoryData = response.data.results;
-        })
-        .catch(error => {
-          this.$swal("Error encountered while fetching data: ", error);
+      if (this.activeCategory == "all") {
+        // Reset active category data
+        this.activeCategoryData = [];
+
+        let urlArray = [];
+        SUBCATEGORIES.forEach(sub => {
+          let axiosRequest = axios.get(buildUrl(sub));
+          urlArray.push(axiosRequest);
         });
+
+        axios
+          .all(urlArray)
+          .then(
+            axios.spread((...responses) => {
+              responses.forEach(responseSet => {
+                  console.log("responseSet: ", responseSet.data.results);
+                  this.activeCategoryData.push(...responseSet.data.results);
+              });
+
+            })
+          )
+          .catch(errors => {
+            this.$swal("Error encountered while fetching data: ", errors);
+          });
+      } else {
+        let url = buildUrl(this.activeCategory);
+        axios
+          .get(url)
+          .then(response => {
+            this.activeCategoryData = response.data.results;
+          })
+          .catch(error => {
+            this.$swal("Error encountered while fetching data: ", error);
+          });
+      }
     },
     showResourceDetails(resource) {
       this.dialogResource = resource;
@@ -116,5 +156,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
