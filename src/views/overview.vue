@@ -17,7 +17,6 @@
 
         <!-- List fetched items by their basic property -->
         <!-- Title for films, name for others -->
-
         <v-card width="100%">
           <v-list>
             <v-list-item v-for="item in activeCategoryData" :key="item.url">
@@ -32,7 +31,7 @@
               </v-list-item-content>
 
               <v-list-item-action>
-                <v-btn icon>
+                <v-btn icon @click.stop="showResourceDetails(item)">
                   <v-icon color="primary lighten-1">mdi-information</v-icon>
                 </v-btn>
               </v-list-item-action>
@@ -41,6 +40,44 @@
         </v-card>
       </v-col>
     </v-row>
+
+
+    <!-- Resource details dialog -->
+    <!-- TODO: encapsulate in separate component -->
+
+    <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">Use Google's location service?</v-card-title>
+
+        <v-card-text>
+          Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            Disagree
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            Agree
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </v-container>
 </template>
 
@@ -65,10 +102,11 @@ import axios from "axios";
 export default {
   name: "overview",
   components: {
-    //VueJsonPretty
+    //VueJsonPretty,
   },
   data() {
     return {
+      dialog: false,
       categories: CATEGORIES,
       activeCategory: null,
       activeCategoryData: null
@@ -88,9 +126,9 @@ export default {
           console.log(error);
         });
     },
-    getCategoryKey(category) {
-      if (category == "films") return "title";
-      return "name";
+    showResourceDetails(resource){
+      console.log("showResourceDetails invoked for resource: ", resource);
+      this.dialog = true;
     }
   }
 };
