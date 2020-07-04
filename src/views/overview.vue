@@ -8,10 +8,10 @@
         <v-btn text large color="primary" @click="getResources()">Get Resources</v-btn>
       </v-col>
     </v-row>
-    <v-row>
-      <div>
-        {{ activeCategoryData }}
-      </div>
+    <v-row align="center">
+      <v-col class="d-flex" cols="12">
+        <vue-json-pretty :data="activeCategoryData" v-if="activeCategoryData"></vue-json-pretty>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -32,13 +32,18 @@ function buildUrl(url) {
 }
 
 import axios from "axios";
+import VueJsonPretty from "vue-json-pretty";
+
 export default {
   name: "overview",
+  components: {
+    VueJsonPretty
+  },
   data() {
     return {
       categories: CATEGORIES,
       activeCategory: null,
-      activeCategoryData: null,
+      activeCategoryData: null
     };
   },
   mounted() {},
@@ -48,7 +53,7 @@ export default {
       axios
         .get(url)
         .then(response => {
-          this.activeCategoryData = response.data.results
+          this.activeCategoryData = response.data.results;
           console.log("fetched category results: ", this.activeCategoryData);
         })
         .catch(error => {
