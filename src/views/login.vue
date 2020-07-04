@@ -1,10 +1,52 @@
+
 <template>
-  <div id="login">
-    <h1>Login</h1>
-    <input type="text" name="username" v-model="input.username" placeholder="Username" />
-    <input type="password" name="password" v-model="input.password" placeholder="Password" />
-    <button type="button" v-on:click="login()">Login</button>
-  </div>
+  <v-app id="inspire">
+    <v-main>
+      <v-container
+        class="fill-height"
+        fluid
+      >
+        <v-row
+          align="center"
+          justify="center"
+        >
+            <v-card class="elevation-12" style="width: 40%">
+              <v-toolbar
+                color="primary"
+                dark
+                flat
+              >
+                <v-toolbar-title>Login</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-form>
+                  <v-text-field
+                    label="Login"
+                    name="login"
+                    prepend-icon="mdi-account"
+                    type="text"
+                    v-model="input.username" 
+                  ></v-text-field>
+
+                  <v-text-field
+                    id="password"
+                    label="Password"
+                    name="password"
+                    prepend-icon="mdi-lock"
+                    type="password"
+                    v-model="input.password" 
+                  ></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" v-on:click="login()">Login</v-btn>
+              </v-card-actions>
+            </v-card>
+        </v-row>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
