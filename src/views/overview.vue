@@ -1,7 +1,7 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row align="center">
-      <v-col class="d-flex" cols="12" sm="6">
+  <v-container style="margin-top: 150px">
+    <v-row justify="center">
+      <v-col class="d-flex" cols="12" sm="4">
         <v-select
           :items="categories"
           label="Select category"
@@ -116,40 +116,5 @@ export default {
 </script>
 
 <style scoped>
-#overview {
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
-  padding: 20px;
-  margin-top: 10px;
-}
 
-.container {
-  padding: 20px 0;
-}
-
-.column:last-child:not(:first-child),
-.columns:last-child:not(:first-child) {
-  float: left;
-}
-
-.main_heading {
-  margin: 10px 0 30px;
-}
-
-.callout {
-  margin-bottom: 40px;
-}
-
-select {
-  text-transform: capitalize;
-}
-
-.loader {
-  text-align: center;
-  padding: 40px;
-}
-
-.uppercase {
-  text-transform: uppercase;
-}
 </style>
