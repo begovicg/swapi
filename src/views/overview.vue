@@ -1,26 +1,36 @@
 <template>
   <v-container style="margin-top: 150px">
     <v-row justify="center">
-      <v-col class="d-flex" cols="12" sm="4">
-        <v-select
-          :items="categories"
-          label="Select category"
-          v-model="activeCategory"
-          outlined
-          @change="getResources()"
-          auto
-        ></v-select>
+      <v-col class cols="12" sm="4">
+        <v-row>
+          <v-select
+            :items="categories"
+            label="Select category"
+            v-model="activeCategory"
+            outlined
+            @change="getResources()"
+            auto
+          ></v-select>
+        </v-row>
+        <v-row>
+          <v-text-field
+            label="Fuzzy search records"
+            placeholder=""
+            v-model="fuzzySearch"
+            outlined
+          ></v-text-field>
+        </v-row>
       </v-col>
-      <v-col class="d-flex" cols="12" sm="6" v-if="activeCategoryData">
+      <v-col class="d-flex" cols="12" sm="6" v-if="records">
         <!--
-        <vue-json-pretty :data="activeCategoryData" v-if="activeCategoryData"></vue-json-pretty>
+        <vue-json-pretty :data="records" v-if="records"></vue-json-pretty>
         -->
 
         <!-- List fetched items by their basic property -->
         <!-- Title for films, name for others -->
         <v-card width="100%">
           <v-list>
-            <v-list-item v-for="item in activeCategoryData" :key="item.url">
+            <v-list-item v-for="item in filteredRecords" :key="item.url">
               <v-list-item-avatar color="black">
                 <span class="white--text">SW</span>
               </v-list-item-avatar>
@@ -101,9 +111,10 @@ export default {
     return {
       categories: CATEGORIES,
       activeCategory: "all",
-      activeCategoryData: [],
+      records: [],
       dialog: false,
-      dialogResource: {}
+      dialogResource: {},
+      fuzzySearch: ""
     };
   },
   mounted() {
@@ -113,7 +124,7 @@ export default {
     getResources() {
       if (this.activeCategory == "all") {
         // Reset active category data
-        this.activeCategoryData = [];
+        this.records = [];
 
         let urlArray = [];
         SUBCATEGORIES.forEach(sub => {
@@ -126,10 +137,9 @@ export default {
           .then(
             axios.spread((...responses) => {
               responses.forEach(responseSet => {
-                  console.log("responseSet: ", responseSet.data.results);
-                  this.activeCategoryData.push(...responseSet.data.results);
+                console.log("responseSet: ", responseSet.data.results);
+                this.records.push(...responseSet.data.results);
               });
-
             })
           )
           .catch(errors => {
@@ -140,7 +150,7 @@ export default {
         axios
           .get(url)
           .then(response => {
-            this.activeCategoryData = response.data.results;
+            this.records = response.data.results;
           })
           .catch(error => {
             this.$swal("Error encountered while fetching data: ", error);
@@ -150,6 +160,17 @@ export default {
     showResourceDetails(resource) {
       this.dialogResource = resource;
       this.dialog = true;
+    }
+  },
+  computed: {
+    // TODO: return filtered records, based on criteria in category selection and fuzzy search textbox
+    filteredRecords: function() {
+      return this.records.filter(
+        record =>
+          JSON.stringify(record)
+            .toLowerCase()
+            .indexOf(this.fuzzySearch.toLowerCase()) !== -1
+      );
     }
   }
 };
