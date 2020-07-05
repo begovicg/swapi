@@ -17,6 +17,7 @@
             v-model="activeCategory"
             outlined
             auto
+            dark
           ></v-select>
         </v-row>
 
@@ -28,13 +29,13 @@
               <p>NOTE - Entire result set will be parsed, any record whose property contains entered string will be displayed in the right sections</p>
             </v-card-text>
           </v-card>
-          <v-text-field label="Fuzzy search records" placeholder v-model="fuzzySearch" outlined></v-text-field>
+          <v-text-field label="Fuzzy search records" placeholder v-model="fuzzySearch" outlined dark></v-text-field>
         </v-row>
 
         <v-row>
           <v-tooltip right>
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" v-on="on" @click="showRandomRecord()">Random</v-btn>
+              <v-btn v-on="on" @click="showRandomRecord()">Random</v-btn>
             </template>
             <span>Random record from current set</span>
           </v-tooltip>
@@ -47,7 +48,7 @@
           <v-list>
             <v-list-item v-for="item in filteredRecords" :key="item.url">
               <v-list-item-avatar color="black">
-                <span class="white--text">SW</span>
+                <span class="white--text sw">SW</span>
               </v-list-item-avatar>
 
               <v-list-item-content>
@@ -59,7 +60,7 @@
                 <v-tooltip right>
                   <template v-slot:activator="{ on }">
                     <v-btn icon v-on="on" @click.stop="showResourceDetails(item)">
-                      <v-icon color="primary lighten-1">mdi-information</v-icon>
+                      <v-icon>mdi-information</v-icon>
                     </v-btn>
                   </template>
                   <span>Show details</span>
@@ -200,8 +201,17 @@ export default {
 <style scoped>
 .infoCard {
   width: 100%;
-  margin-top: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   padding: 6px;
+  padding-bottom: 0px;
+}
+
+.v-btn:not(.v-btn--icon) {
+  color: #FFE81F;
+  background-color: black !important;
+}
+
+.white--text.sw{
+  color: #FFE81F !important;
 }
 </style>
