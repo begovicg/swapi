@@ -3,6 +3,14 @@
     <v-row justify="center">
       <v-col class cols="12" sm="4">
         <v-row>
+          <v-card class="infoCard">
+            <v-card-text>
+              <div>Category filter</div>
+              <br />
+              <p>NOTE - filter applies on result set for fuzzy search</p>
+            </v-card-text>
+          </v-card>
+
           <v-select
             :items="categories"
             label="Select category"
@@ -12,23 +20,23 @@
             auto
           ></v-select>
         </v-row>
+
         <v-row>
-          <v-text-field
-            label="Fuzzy search records"
-            placeholder=""
-            v-model="fuzzySearch"
-            outlined
-          ></v-text-field>
+          <v-card class="infoCard">
+            <v-card-text>
+              <div>Fuzzy search</div>
+              <br />
+              <p>NOTE - Entire result set will be parsed, any record whose property contains entered string will be displayed in the right sections</p>
+            </v-card-text>
+          </v-card>
+          <v-text-field label="Fuzzy search records" placeholder v-model="fuzzySearch" outlined></v-text-field>
         </v-row>
       </v-col>
       <v-col class="d-flex" cols="12" sm="6" v-if="records">
-        <!--
-        <vue-json-pretty :data="records" v-if="records"></vue-json-pretty>
-        -->
 
         <!-- List fetched items by their basic property -->
         <!-- Title for films, name for others -->
-        <v-card width="100%">
+        <v-card width="100%" height="max-content">
           <v-list>
             <v-list-item v-for="item in filteredRecords" :key="item.url">
               <v-list-item-avatar color="black">
@@ -41,9 +49,14 @@
               </v-list-item-content>
 
               <v-list-item-action>
-                <v-btn icon @click.stop="showResourceDetails(item)">
-                  <v-icon color="primary lighten-1">mdi-information</v-icon>
-                </v-btn>
+                <v-tooltip right>
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon v-on="on" @click.stop="showResourceDetails(item)">
+                      <v-icon color="primary lighten-1">mdi-information</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Show details</span>
+                </v-tooltip>
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -177,4 +190,10 @@ export default {
 </script>
 
 <style scoped>
+.infoCard {
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 6px;
+}
 </style>

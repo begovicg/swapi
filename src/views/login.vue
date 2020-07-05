@@ -78,7 +78,6 @@ export default {
     },
 
     showAlert(message) {
-      // Use sweetalert2
       this.$swal(message);
     }
   }
