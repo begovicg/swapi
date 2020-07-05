@@ -7,7 +7,7 @@
             <v-card-text>
               <div>Category filter</div>
               <br />
-              <p>NOTE - filter applies on result set for fuzzy search</p>
+              <p>NOTE - filter applies before fuzzy search criteria</p>
             </v-card-text>
           </v-card>
 
@@ -16,7 +16,6 @@
             label="Select category"
             v-model="activeCategory"
             outlined
-            @change="getResources()"
             auto
           ></v-select>
         </v-row>
@@ -33,7 +32,6 @@
         </v-row>
       </v-col>
       <v-col class="d-flex" cols="12" sm="6" v-if="records">
-
         <!-- List fetched items by their basic property -->
         <!-- Title for films, name for others -->
         <v-card width="100%" height="max-content">
@@ -135,40 +133,27 @@ export default {
   },
   methods: {
     getResources() {
-      if (this.activeCategory == "all") {
-        // Reset active category data
-        this.records = [];
+      // Reset active category data
+      this.records = [];
 
-        let urlArray = [];
-        SUBCATEGORIES.forEach(sub => {
-          let axiosRequest = axios.get(buildUrl(sub));
-          urlArray.push(axiosRequest);
-        });
+      let urlArray = [];
+      SUBCATEGORIES.forEach(sub => {
+        let axiosRequest = axios.get(buildUrl(sub));
+        urlArray.push(axiosRequest);
+      });
 
-        axios
-          .all(urlArray)
-          .then(
-            axios.spread((...responses) => {
-              responses.forEach(responseSet => {
-                console.log("responseSet: ", responseSet.data.results);
-                this.records.push(...responseSet.data.results);
-              });
-            })
-          )
-          .catch(errors => {
-            this.$swal("Error encountered while fetching data: ", errors);
-          });
-      } else {
-        let url = buildUrl(this.activeCategory);
-        axios
-          .get(url)
-          .then(response => {
-            this.records = response.data.results;
+      axios
+        .all(urlArray)
+        .then(
+          axios.spread((...responses) => {
+            responses.forEach(responseSet => {
+              this.records.push(...responseSet.data.results);
+            });
           })
-          .catch(error => {
-            this.$swal("Error encountered while fetching data: ", error);
-          });
-      }
+        )
+        .catch(errors => {
+          this.$swal("Error encountered while fetching data: ", errors);
+        });
     },
     showResourceDetails(resource) {
       this.dialogResource = resource;
@@ -176,14 +161,23 @@ export default {
     }
   },
   computed: {
-    // TODO: return filtered records, based on criteria in category selection and fuzzy search textbox
+    // TODO: Expand filtered records with 1st step - filter against value in dropdown
     filteredRecords: function() {
-      return this.records.filter(
-        record =>
-          JSON.stringify(record)
-            .toLowerCase()
-            .indexOf(this.fuzzySearch.toLowerCase()) !== -1
-      );
+      return this.records
+        .filter(record => {
+          let recordCategory = record.url
+            .split("http://swapi.dev/api/")
+            .pop()
+            .split("/")[0];
+          if (this.activeCategory == "all") return true;
+          return recordCategory == this.activeCategory;
+        })
+        .filter(
+          record =>
+            JSON.stringify(record)
+              .toLowerCase()
+              .indexOf(this.fuzzySearch.toLowerCase()) !== -1
+        );
     }
   }
 };
