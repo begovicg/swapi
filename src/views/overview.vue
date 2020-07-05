@@ -1,7 +1,7 @@
 <template>
   <v-container style="margin-top: 150px">
     <v-row justify="center">
-      <v-col class cols="12" sm="4">
+      <v-col class cols="12" sm="5">
         <v-row>
           <v-card class="infoCard">
             <v-card-text>
@@ -30,8 +30,17 @@
           </v-card>
           <v-text-field label="Fuzzy search records" placeholder v-model="fuzzySearch" outlined></v-text-field>
         </v-row>
+
+        <v-row>
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <v-btn color="primary" v-on="on" @click="showRandomRecord()">Random</v-btn>
+            </template>
+            <span>Random record from current set</span>
+          </v-tooltip>
+        </v-row>
       </v-col>
-      <v-col class="d-flex" cols="12" sm="6" v-if="records">
+      <v-col cols="12" sm="6">
         <!-- List fetched items by their basic property -->
         <!-- Title for films, name for others -->
         <v-card width="100%" height="max-content">
@@ -158,6 +167,11 @@ export default {
     showResourceDetails(resource) {
       this.dialogResource = resource;
       this.dialog = true;
+    },
+    // NOTE: try generating random record from result set and displaying it in dialog
+    showRandomRecord() {
+      let idx = Math.floor(Math.random() * this.filteredRecords.length);
+      this.showResourceDetails(this.filteredRecords[idx]);
     }
   },
   computed: {
